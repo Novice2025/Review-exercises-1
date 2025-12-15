@@ -5,42 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lego Block Builder - English Unlocked</title>
 
-    <!-- 1. Tailwind CSS for Styling -->
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- 2. React and ReactDOM (The Core) -->
+    <!-- 2. React and ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-    <!-- 3. Babel to compile JSX in the browser -->
+    <!-- 3. Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- 4. Google Fonts -->
+    <!-- 4. Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
 
-    <!-- Custom Config for Tailwind -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Poppins', 'sans-serif'],
-                    },
-                    animation: {
-                        fadeInDown: 'fadeInDown 0.5s ease-out forwards',
-                        pulseOnce: 'pulseOnce 0.5s ease-out forwards',
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Poppins', 'sans-serif'] },
+                    animation: { fadeInDown: 'fadeInDown 0.5s ease-out forwards', pulseOnce: 'pulseOnce 0.5s ease-out forwards' },
                     keyframes: {
-                        fadeInDown: {
-                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        pulseOnce: {
-                            '0%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.05)' },
-                            '100%': { transform: 'scale(1)' },
-                        }
+                        fadeInDown: { '0%': { opacity: '0', transform: 'translateY(-20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        pulseOnce: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.05)' }, '100%': { transform: 'scale(1)' } }
                     }
                 }
             }
@@ -48,24 +34,9 @@
     </script>
 
     <style>
-        /* Custom cursor for typing effect */
-        .typing-cursor {
-            display: inline-block;
-            width: 0.1em;
-            height: 1.2em;
-            background-color: #f8fafc;
-            animation: blink 1s step-end infinite;
-            margin-left: 2px;
-            vertical-align: middle;
-        }
-        @keyframes blink {
-            from, to { background-color: transparent }
-            50% { background-color: #f8fafc }
-        }
-        /* Neon shadow effect */
-        .shadow-neon {
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 20px rgba(0, 255, 255, 0.4);
-        }
+        .typing-cursor { display: inline-block; width: 0.1em; height: 1.2em; background-color: #f8fafc; animation: blink 1s step-end infinite; margin-left: 2px; vertical-align: middle; }
+        @keyframes blink { from, to { background-color: transparent } 50% { background-color: #f8fafc } }
+        .shadow-neon { box-shadow: 0 0 10px rgba(0, 255, 255, 0.6), 0 0 20px rgba(0, 255, 255, 0.4); }
     </style>
 </head>
 <body class="bg-black text-white min-h-screen">
@@ -74,31 +45,70 @@
     <script type="text/babel">
         const { useState, useCallback, useEffect } = React;
 
-        // --- ICONS (Raw SVGs for standalone file) ---
-        const RefreshCw = ({ className }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-        );
-        const CheckCircle = ({ className }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        );
-        const XCircle = ({ className }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-        );
-        const Focus = ({ className }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
-        );
+        // --- ICONS ---
+        const RefreshCw = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>;
+        const CheckCircle = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>;
+        const XCircle = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>;
+        const Focus = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="3"/><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>;
+        const ArrowRight = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
 
-        // --- DATA ---
-        const TARGET_SENTENCE = [
-            { id: 1, content: 'DO', type: 'auxiliary', color: 'bg-cyan-500 hover:bg-cyan-400' },
-            { id: 2, content: 'I', type: 'subject', color: 'bg-lime-500 hover:bg-lime-400' },
-            { id: 3, content: 'HAVE', type: 'verb', color: 'bg-red-600 hover:bg-red-500' },
-            { id: 4, content: 'A PROBLEM?', type: 'object', color: 'bg-fuchsia-500 hover:bg-fuchsia-400' },
+        // --- DRILL DATA (Based on your PDF) ---
+        const DRILLS = [
+            {
+                id: 1,
+                title: "Bloco: Have Got (Schedule)",
+                target: [
+                    { id: 1, content: 'I', color: 'bg-lime-500 hover:bg-lime-400' },
+                    { id: 2, content: 'HAVE GOT', color: 'bg-red-600 hover:bg-red-500' },
+                    { id: 3, content: 'A MEETING', color: 'bg-fuchsia-500 hover:bg-fuchsia-400' },
+                ],
+                hint: "Eu tenho uma reunião (agendada).",
+                explanation: {
+                    title: "O 'Ter' do Dia a Dia",
+                    l1: "Eu tenho uma reunião.",
+                    l2: "Use **HAVE GOT** para compromissos agendados ou posse atual. É o seu 'ter' direto e reto.",
+                    hook: "GRAVE ISSO: 'Have got' = {HÉV GÓT}. Não é passado, é AGORA!"
+                }
+            },
+            {
+                id: 2,
+                title: "Bloco: Work + AT",
+                target: [
+                    { id: 4, content: 'I', color: 'bg-lime-500 hover:bg-lime-400' },
+                    { id: 5, content: 'WORK', color: 'bg-cyan-600 hover:bg-cyan-500' },
+                    { id: 6, content: 'AT', color: 'bg-yellow-500 hover:bg-yellow-400' },
+                    { id: 7, content: 'AMAZON', color: 'bg-fuchsia-500 hover:bg-fuchsia-400' },
+                ],
+                hint: "Eu trabalho na Amazon.",
+                explanation: {
+                    title: "Onde você trabalha?",
+                    l1: "Eu trabalho na Amazon.",
+                    l2: "Use **AT** para empresas ou endereços específicos. Pense em um ponto no mapa.",
+                    hook: "FALE COM PRECISÃO: Empresa = Lugar fechado/Ponto fixo -> Use AT!"
+                }
+            },
+            {
+                id: 3,
+                title: "Bloco: Deadlines",
+                target: [
+                    { id: 8, content: 'THE', color: 'bg-indigo-500 hover:bg-indigo-400' },
+                    { id: 9, content: 'DEADLINE', color: 'bg-red-600 hover:bg-red-500' },
+                    { id: 10, content: 'IS', color: 'bg-cyan-600 hover:bg-cyan-500' },
+                    { id: 11, content: 'FRIDAY', color: 'bg-lime-500 hover:bg-lime-400' },
+                ],
+                hint: "O prazo final é sexta-feira.",
+                explanation: {
+                    title: "Prazo Final",
+                    l1: "O prazo é sexta.",
+                    l2: "**Deadline** é a data final. Use **THE** (com a língua presa!) para ser específico.",
+                    hook: "NÃO PERCA O PRAZO: Deadline = {DÉD-LÁIN}. Seja direto!"
+                }
+            }
         ];
 
         // --- COMPONENTS ---
 
-        const TypingText = ({ text, delay = 50, className = '', onComplete }) => {
+        const TypingText = ({ text, delay = 30, className = '', onComplete }) => {
             const [displayedText, setDisplayedText] = useState('');
             const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -117,7 +127,6 @@
             return <p className={className}>{displayedText}<span className="typing-cursor"></span></p>;
         };
 
-        // Draggable Lego Block
         const LegoBlock = ({ id, content, color, isDraggingSource }) => {
             const handleDragStart = (e) => {
                 e.dataTransfer.setData("text/plain", id);
@@ -131,8 +140,8 @@
                     className={`
                         ${color} text-gray-900 font-extrabold p-4 rounded-xl shadow-neon cursor-grab select-none
                         transform transition-all duration-300 active:scale-105 active:cursor-grabbing
-                        ${isDraggingSource ? 'opacity-50 border-4 border-dashed border-gray-600' : 'opacity-100'}
-                        text-2xl sm:text-3xl tracking-wider min-w-[120px] text-center
+                        ${isDraggingSource ? 'opacity-100 hover:scale-105' : 'opacity-100'}
+                        text-xl sm:text-2xl tracking-wider min-w-[100px] text-center
                     `}
                     style={{ fontFamily: "'Inter', sans-serif" }}
                 >
@@ -141,12 +150,11 @@
             );
         };
 
-        // Drop Zone
         const DropZone = ({ index, onDropBlock, block, isCorrect }) => {
             const [isOver, setIsOver] = useState(false);
 
             const handleDragOver = (e) => {
-                e.preventDefault(); // Necessary to allow dropping
+                e.preventDefault();
                 setIsOver(true);
             };
 
@@ -163,7 +171,6 @@
                 }
             };
 
-            // Styling logic
             let borderColor = 'border-gray-700';
             let background = 'bg-gray-800/50 border-dashed';
 
@@ -180,20 +187,15 @@
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
                     className={`
-                        min-h-[6rem] w-full sm:w-1/4 flex items-center justify-center p-2 rounded-xl border-4 transition-all duration-300
+                        min-h-[5rem] w-full sm:w-auto flex-1 flex items-center justify-center p-2 rounded-xl border-4 transition-all duration-300
                         ${borderColor} ${background}
                         ${isCorrect ? 'animate-pulseOnce' : ''}
                     `}
                 >
                     {block ? (
-                        <LegoBlock
-                            id={block.id}
-                            content={block.content}
-                            color={block.color}
-                            isDraggingSource={false}
-                        />
+                        <LegoBlock id={block.id} content={block.content} color={block.color} isDraggingSource={false} />
                     ) : (
-                        <span className="text-gray-500 font-medium italic text-sm">Drop Block {index + 1} Here</span>
+                        <span className="text-gray-500 font-medium italic text-sm">Block {index + 1}</span>
                     )}
                 </div>
             );
@@ -201,167 +203,168 @@
 
         // --- MAIN APP ---
         const App = () => {
-            const [currentOrder, setCurrentOrder] = useState(Array(TARGET_SENTENCE.length).fill(null));
+            const [level, setLevel] = useState(0);
+            const currentDrill = DRILLS[level];
+
+            const [currentOrder, setCurrentOrder] = useState([]);
             const [shuffledBlocks, setShuffledBlocks] = useState([]);
             const [feedback, setFeedback] = useState({ message: '', type: null });
-            const [isTypingComplete, setIsTypingComplete] = useState(false);
+            const [isLevelComplete, setIsLevelComplete] = useState(false);
 
-            // Shuffle Logic
-            const shuffle = useCallback(() => {
-                let array = [...TARGET_SENTENCE];
+            // Initialize Level
+            const initLevel = useCallback(() => {
+                const target = DRILLS[level].target;
+                setCurrentOrder(Array(target.length).fill(null));
+
+                // Shuffle
+                let array = [...target];
                 for (let i = array.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
                     [array[i], array[j]] = [array[j], array[i]];
                 }
                 setShuffledBlocks(array);
-                setCurrentOrder(Array(TARGET_SENTENCE.length).fill(null));
                 setFeedback({ message: '', type: null });
-            }, []);
+                setIsLevelComplete(false);
+            }, [level]);
 
             useEffect(() => {
-                shuffle();
-            }, [shuffle]);
+                initLevel();
+            }, [initLevel]);
 
-            // Check Logic
             const checkCompletion = useCallback((newOrder) => {
                 const isComplete = newOrder.every(block => block !== null);
                 if (isComplete) {
-                    const isCorrect = newOrder.every((block, index) => block.id === TARGET_SENTENCE[index].id);
+                    const isCorrect = newOrder.every((block, index) => block.id === currentDrill.target[index].id);
 
                     if (isCorrect) {
-                        setFeedback({ 
-                            message: "Sensacional! A estrutura está perfeita. Você usou o auxiliar 'DO' corretamente para perguntar sobre a ação 'HAVE'.", 
-                            type: 'success' 
-                        });
+                        setFeedback({ message: "PERFEITO! Bloco construído com sucesso.", type: 'success' });
+                        setIsLevelComplete(true);
                     } else {
-                        setFeedback({ 
-                            message: "Quase lá! A estrutura está incorreta. Revise o Bloco DO (Auxiliar) e a ordem dos outros blocos.", 
-                            type: 'error' 
-                        });
+                        setFeedback({ message: "A ordem não está certa. Tente novamente!", type: 'error' });
+                        setIsLevelComplete(false);
                     }
                 }
-            }, []);
+            }, [currentDrill]);
 
             const onDropBlock = useCallback((blockId, dropIndex) => {
-                const blockToMove = TARGET_SENTENCE.find(block => block.id === blockId);
+                const blockToMove = currentDrill.target.find(block => block.id === blockId);
                 if (!blockToMove) return;
 
-                // 1. Remove from old position if it was already placed
                 const oldIndex = currentOrder.findIndex(block => block && block.id === blockId);
                 let newOrder = [...currentOrder];
 
-                if (oldIndex !== -1) {
-                    newOrder[oldIndex] = null;
-                }
-
-                // 2. Place in new position
+                if (oldIndex !== -1) newOrder[oldIndex] = null;
                 newOrder[dropIndex] = blockToMove;
 
-                // 3. Update state
                 setCurrentOrder(newOrder);
                 checkCompletion(newOrder);
 
-                // 4. Update source pool
                 const blocksInDropZone = newOrder.filter(b => b !== null).map(b => b.id);
-                setShuffledBlocks(TARGET_SENTENCE.filter(b => !blocksInDropZone.includes(b.id)));
+                setShuffledBlocks(currentDrill.target.filter(b => !blocksInDropZone.includes(b.id)));
+            }, [currentOrder, checkCompletion, currentDrill]);
 
-            }, [currentOrder, checkCompletion]);
-
-            const isBlockCorrect = useCallback((block, index) => {
-                return block && block.id === TARGET_SENTENCE[index].id;
-            }, []);
-
-            const handleTypingComplete = () => setIsTypingComplete(true);
+            const nextLevel = () => {
+                if (level < DRILLS.length - 1) {
+                    setLevel(prev => prev + 1);
+                } else {
+                    // Loop back or finish
+                    setLevel(0); 
+                }
+            };
 
             return (
-                <div className="min-h-screen pt-12 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 to-black">
+                <div className="min-h-screen pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 to-black">
 
                     {/* Header */}
-                    <header className="text-center mb-12">
-                        <h1 className="text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tighter drop-shadow-lg shadow-cyan-500/50 font-display">
-                            <span className="inline-block animate-fadeInDown text-fuchsia-400">Lego Block</span>
-                            <span className="inline-block text-cyan-400 ml-3 animate-fadeInDown" style={{animationDelay: '0.2s'}}>Builder</span>
+                    <header className="text-center mb-8">
+                        <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-2 tracking-tighter drop-shadow-lg shadow-cyan-500/50 font-display">
+                            <span className="text-fuchsia-400">Lego Block</span> <span className="text-cyan-400">Builder</span>
                         </h1>
-                        <p className="text-xl font-medium text-gray-400 mt-2 italic">Structural Training for Brazilian Speakers</p>
+                        <div className="flex justify-center items-center gap-2 text-gray-400 text-sm font-medium">
+                            <span>Level {level + 1} of {DRILLS.length}</span>
+                            <div className="w-32 h-2 bg-gray-800 rounded-full overflow-hidden">
+                                <div 
+                                    className="h-full bg-cyan-500 transition-all duration-500" 
+                                    style={{ width: `${((level + 1) / DRILLS.length) * 100}%` }}
+                                ></div>
+                            </div>
+                        </div>
                     </header>
 
                     {/* Content Grid */}
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                         {/* LEFT COLUMN: Explanation */}
-                        <div className="lg:col-span-1 space-y-8">
-                            <div className="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-cyan-700">
-                                <h2 className="text-2xl font-bold text-cyan-400 mt-6 mb-3 border-b-2 border-fuchsia-500 pb-1 flex items-center drop-shadow-sm">
-                                    <Focus className="w-6 h-6 mr-2 text-fuchsia-400"/> 
-                                    Bloco 1: O Auxiliar <span className="text-cyan-400 ml-1">DO</span>
+                        <div className="lg:col-span-1 space-y-6">
+                            <div className="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-cyan-700 h-full">
+                                <h2 className="text-xl font-bold text-cyan-400 mb-4 border-b border-gray-700 pb-2 flex items-center">
+                                    <Focus className="w-5 h-5 mr-2 text-fuchsia-400"/> 
+                                    {currentDrill.explanation.title}
                                 </h2>
 
-                                <div className="text-lg text-gray-300 leading-relaxed">
-                                    <TypingText 
-                                        text="❌ The disaster phrase: Am I have a problem? ❌" 
-                                        delay={30} 
-                                        className="font-bold italic text-red-500 drop-shadow-md text-xl mb-4" 
-                                        onComplete={handleTypingComplete} 
-                                    />
+                                <div className="text-gray-300 space-y-4">
+                                    <p className="font-medium text-white">{currentDrill.explanation.l1}</p>
+                                    <p className="text-sm leading-relaxed">{currentDrill.explanation.l2}</p>
 
-                                    {isTypingComplete && (
-                                        <div className="animate-fadeInDown">
-                                            <p className="mt-4">
-                                                <span className="font-bold italic text-red-500">English Logic (L2):</span> We use the auxiliary **DO** or **DOES** when asking about an **action** (like <span className="font-bold text-lime-400">have, go, work</span>).
-                                            </p>
-                                            <p className="mt-4 pt-4 border-t border-gray-700">
-                                                <span className="font-bold italic text-lime-400">Lógica Portuguesa (L1):</span> No Brasil, o verbo de ação já faz a pergunta. Mas no inglês, o <span className="font-bold text-cyan-400">DO</span> não significa nada — ele só *marca* a pergunta.
-                                            </p>
-                                            <p className="mt-4 text-center p-3 bg-red-900/40 rounded-lg border border-red-700 font-extrabold text-red-400 drop-shadow-md">
-                                                A regra é: <span className="text-lg text-cyan-400">DO</span> + <span className="text-lg text-lime-400">Subject</span> + <span className="text-lg text-fuchsia-400">Verb</span>
-                                            </p>
-                                        </div>
-                                    )}
+                                    <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-lg">
+                                        <p className="text-red-300 font-bold text-sm italic">
+                                            {currentDrill.explanation.hook}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* RIGHT COLUMN: Drill */}
                         <div className="lg:col-span-2 space-y-6">
-                            <h2 className="text-3xl font-bold text-center text-gray-100 mb-6 drop-shadow-lg">🔨 Montagem do Bloco: Drag and Drop Drill</h2>
+
+                            {/* Target Hint */}
+                            <div className="text-center">
+                                <p className="text-gray-400 text-sm mb-2">Target Sentence:</p>
+                                <h3 className="text-2xl font-bold text-white tracking-wide">{currentDrill.hint}</h3>
+                            </div>
 
                             {/* Drop Zones */}
-                            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 p-4 bg-gray-900/60 rounded-2xl shadow-inner shadow-black border border-gray-700 min-h-[10rem]">
+                            <div className="flex flex-wrap justify-center gap-2 p-4 bg-gray-900/60 rounded-2xl shadow-inner shadow-black border border-gray-700 min-h-[8rem]">
                                 {currentOrder.map((block, index) => (
                                     <DropZone
                                         key={index}
                                         index={index}
                                         onDropBlock={onDropBlock}
                                         block={block}
-                                        isCorrect={isBlockCorrect(block, index)}
+                                        isCorrect={block && block.id === currentDrill.target[index].id}
                                     />
                                 ))}
                             </div>
 
-                            {/* Feedback */}
-                            {feedback.message && (
-                                <div className={`p-4 rounded-xl text-center font-bold text-lg flex items-center justify-center transition-all duration-300 shadow-xl ${
-                                    feedback.type === 'success'
-                                        ? 'bg-lime-900/70 text-lime-300 border-lime-500 animate-pulseOnce'
-                                        : 'bg-red-900/70 text-red-400 border-red-500'
-                                }`}>
-                                    {feedback.type === 'success' ? <CheckCircle className="w-6 h-6 mr-3" /> : <XCircle className="w-6 h-6 mr-3" />}
-                                    {feedback.message}
-                                </div>
-                            )}
+                            {/* Feedback & Next Button */}
+                            <div className="h-16 flex items-center justify-center">
+                                {feedback.message && !isLevelComplete && (
+                                    <div className={`px-4 py-2 rounded-lg font-bold flex items-center ${feedback.type === 'error' ? 'text-red-400 bg-red-900/50' : 'text-lime-400'}`}>
+                                        {feedback.type === 'error' && <XCircle className="w-5 h-5 mr-2"/>}
+                                        {feedback.message}
+                                    </div>
+                                )}
+
+                                {isLevelComplete && (
+                                    <button 
+                                        onClick={nextLevel}
+                                        className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-3 px-8 rounded-xl shadow-neon flex items-center transform hover:scale-105 transition-all animate-pulseOnce"
+                                    >
+                                        {level < DRILLS.length - 1 ? "Next Level" : "Restart Drills"} <ArrowRight className="ml-2 w-5 h-5"/>
+                                    </button>
+                                )}
+                            </div>
 
                             {/* Source Blocks */}
                             <div className="p-6 bg-gray-900 rounded-2xl shadow-2xl shadow-black border border-cyan-700">
-                                <h3 className="text-xl font-semibold text-gray-300 mb-4 flex items-center justify-between">
-                                    Arraste os Blocos (Lego Pieces):
-                                    <button
-                                        onClick={shuffle}
-                                        className="flex items-center text-sm text-cyan-400 hover:text-cyan-200 transition duration-150 p-2 rounded-lg bg-gray-800 hover:bg-gray-700 border border-cyan-500/50"
-                                    >
-                                        <RefreshCw className="w-4 h-4 mr-1" /> Resetar
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-gray-400 font-semibold text-sm">Lego Pieces</h3>
+                                    <button onClick={initLevel} className="text-xs text-cyan-400 hover:text-white flex items-center">
+                                        <RefreshCw className="w-3 h-3 mr-1"/> Reset
                                     </button>
-                                </h3>
-                                <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                                </div>
+                                <div className="flex flex-wrap justify-center gap-3">
                                     {shuffledBlocks.map((block) => (
                                         <LegoBlock 
                                             key={block.id} 
@@ -373,16 +376,11 @@
                                     ))}
                                 </div>
                             </div>
-
-                            <p className="text-center text-sm text-gray-500 mt-4">
-                                Target Sentence: **DO I HAVE A PROBLEM?**
-                            </p>
                         </div>
                     </div>
 
-                    <footer className="text-center mt-20 text-gray-500 text-sm border-t border-gray-700 pt-4">
-                        <p>Created by Daby</p>
-                        <p className="mt-1 font-bold text-cyan-400">L1X2 Lego block method</p>
+                    <footer className="text-center mt-12 text-gray-600 text-xs border-t border-gray-800 pt-4">
+                        <p>English Unlocked: The Brazilian Way</p>
                     </footer>
                 </div>
             );
